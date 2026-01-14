@@ -24,18 +24,18 @@ if uploaded_file:
     min_cnt = st.sidebar.number_input("최소 배달건수 기준", value=1000)
     min_quality = st.sidebar.slider("최소 품질 지수 기준", 0.5, 1.0, 1.5, 2.0)
 
-    # 1. 한글 폰트 설정 (OS별 설정)
-    if platform.system() == 'Windows':
-        # 윈도우의 경우
-        plt.rc('font', family='Malgun Gothic')
-    elif platform.system() == 'Darwin':
-        # 맥(Mac)의 경우
-        plt.rc('font', family='AppleGothic')
-    else:
-        # 리눅스(Linux/Colab)의 경우 (폰트가 설치되어 있어야 함)
-        plt.rc('font', family='NanumGothic')
+    def set_korean_font():
+        plt.rcParams['axes.unicode_minus'] = False
+        system = platform.system()
+        if system == 'Windows':
+            plt.rc('font', family='Malgun Gothic')
+        elif system == 'Darwin':
+            plt.rc('font', family='AppleGothic')
+        else:
+            # Streamlit Cloud(Linux) 환경을 위한 나눔고딕 설정
+            plt.rc('font', family='NanumGothic')
 
-    plt.rcParams['axes.unicode_minus'] = False
+    set_korean_font()
 
     df['지역'] = df['pickup_rgn1_nm'] + "_" + df['pickup_rgn2_nm']
     latest_week = df['part_week'].max()
