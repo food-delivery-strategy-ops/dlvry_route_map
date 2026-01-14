@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import platform
 import matplotlib.font_manager as fm
+import os
 
 # 웹 페이지 레이아웃 설정
 st.set_page_config(page_title="배달 데이터 분석 대시보드", layout="wide")
@@ -25,31 +26,29 @@ if uploaded_file:
     min_cnt = st.sidebar.number_input("최소 배달건수 기준", value=1000)
     min_quality = st.sidebar.slider("최소 품질 지수 기준", 0.1, 5.0, 2.0)
 
-    @st.cache_resource # 폰트 설정을 캐싱하여 속도 향상
-    def set_korean_font():
-        plt.rcParams['axes.unicode_minus'] = False
-        system = platform.system()
+    @st.cache_resource
+    def set_font():
+        # 파일 이름이 '나눔고딕.ttf'인 경우 (파일명이 다르면 아래 이름을 수정하세요)
+        font_file = 'NanumGothic.ttf'
         
-        if system == 'Windows':
-            plt.rc('font', family='Malgun Gothic')
-        elif system == 'Darwin':
-            plt.rc('font', family='AppleGothic')
+        # 현재 app.py가 실행되는 폴더에서 폰트 파일의 전체 경로를 찾음
+        font_path = os.path.join(os.path.dirname(__file__), font_file)
+        
+        if os.path.exists(font_path):
+            # Matplotlib에 폰트 등록
+            fm.fontManager.addfont(font_path)
+            prop = fm.FontProperties(fname=font_path)
+            
+            # 기본 폰트로 설정
+            plt.rc('font', family=prop.get_name())
+            plt.rcParams['axes.unicode_minus'] = False # 마이너스 기호 깨짐 방지
         else:
-            # Streamlit Cloud(Linux) 환경: 나눔고딕 설치 및 경로 지정
-            # 보통 나눔고딕이 기본 설치되어 있지 않으므로 폰트 경로를 직접 체크하거나 
-            # 시스템 폰트 목록에서 나눔을 찾아 설정합니다.
-            try:
-                # 폰트 매니저에 나눔고딕이 있는지 확인
-                font_names = [f.name for f in fm.fontManager.ttflist]
-                if 'NanumGothic' in font_names:
-                    plt.rc('font', family='NanumGothic')
-                else:
-                    # 폰트가 없을 경우 대비하여 범용 폰트 설정
-                    plt.rc('font', family='DejaVu Sans') 
-            except:
-                pass
+            # 파일이 없을 경우 웹 화면에 에러 표시 (팀원들이 확인할 수 있게 함)
+            st.error(f"⚠️ 폰트 파일을 찾을 수 없습니다: {font_file}")
+            st.info("깃허브 저장소에 '나눔고딕.ttf' 파일이 app.py와 같은 폴더에 있는지 확인해주세요.")
 
-    set_korean_font()
+    # 폰트 설정 실행
+    set_font()
 
     df['지역'] = df['pickup_rgn1_nm'] + "_" + df['pickup_rgn2_nm']
     latest_week = df['part_week'].max()
