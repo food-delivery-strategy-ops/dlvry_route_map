@@ -7,7 +7,7 @@ import matplotlib.font_manager as fm
 import os
 
 # 웹 페이지 레이아웃 설정
-st.set_page_config(page_title="배달 데이터 분석 대시보드", layout="wide")
+st.set_page_config(page_title="배달 데이터 분석 대시보드", layout="centered")
 
 st.title("📊 주차별 지역 배달 지표 분석")
 st.sidebar.header("설정 및 필터")
@@ -25,6 +25,12 @@ if uploaded_file:
     # 2. 필터링 수치 설정 (웹에서 조절 가능)
     min_cnt = st.sidebar.number_input("최소 배달건수 기준", value=1000)
     min_quality = st.sidebar.slider("최소 품질 지수 기준", 0.1, 5.0, 2.0)
+
+# ★ 추가: 점 크기 기준 선택 라디오 버튼
+    size_option = st.sidebar.radio(
+        "점 크기 기준 선택",
+        ('배달건수', '품질(60분초과율)')
+    )
 
     @st.cache_resource
     def set_font():
@@ -92,12 +98,19 @@ if uploaded_file:
     for week in weeks:
         week_data = df_filtered[df_filtered['part_week'] == week]
         
+        # ★ 점 크기 로직 할당
+        if size_option == '배달건수':
+            point_sizes = np.sqrt(week_data['dlvry_cnt_fact']) * 2  # 배달건수에 따른 크기
+        else:
+            # 품질 지수는 값이 작으므로(예: 2.5), 차이를 보여주기 위해 지수승이나 큰 가중치 사용
+            point_sizes = (week_data['dt60min_fact'] ** 2) * 5
+
         # 산점도 그리기
         # s 파라미터에 배달건수를 넣어 크기 조절 (수치가 너무 크면 적절히 나눕니다, 예: / 10)
         ax.scatter(
             week_data['QSH 비중'], 
             week_data['rider_cnt_error'], 
-            s=np.sqrt(week_data['dlvry_cnt_fact'])*2,  # 건수에 따른 크기 조절
+            s=point_sizes,  # 건수에 따른 크기 조절
             c=colors[week], 
             label=f'{week} 주차', 
             alpha=0.5, 
