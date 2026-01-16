@@ -63,7 +63,7 @@ if uploaded_file:
     df_filtered = df[df['지역'].isin(target_regions)].copy()
 
         # 4. 그래프 생성
-    fig, ax = plt.subplots(figsize=(14, 10))
+    fig, ax = plt.subplots(figsize=(12, 8))
 
     # 5. 주차별 설정 (2주치 데이터 가정)
     weeks = sorted(df_filtered['part_week'].unique())
