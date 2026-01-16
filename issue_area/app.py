@@ -63,7 +63,7 @@ if uploaded_file:
     df_filtered = df[df['지역'].isin(target_regions)].copy()
 
         # 4. 그래프 생성
-    fig, ax = plt.subplots(figsize=(12, 8))
+    fig, ax = plt.subplots(figsize=(14, 10))
 
     # 5. 주차별 설정 (2주치 데이터 가정)
     weeks = sorted(df_filtered['part_week'].unique())
@@ -103,7 +103,7 @@ if uploaded_file:
             point_sizes = np.sqrt(week_data['dlvry_cnt_fact']) * 2  # 배달건수에 따른 크기
         else:
             # 품질 지수는 값이 작으므로(예: 2.5), 차이를 보여주기 위해 지수승이나 큰 가중치 사용
-            point_sizes = (week_data['dt60min_fact'] ** 2) * 15
+            point_sizes = (week_data['dt60min_fact'] ** 2) * 20
 
         # 산점도 그리기
         # s 파라미터에 배달건수를 넣어 크기 조절 (수치가 너무 크면 적절히 나눕니다, 예: / 10)
