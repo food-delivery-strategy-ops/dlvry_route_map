@@ -29,7 +29,7 @@ if uploaded_file:
 # ★ 추가: 점 크기 기준 선택 라디오 버튼
     size_option = st.sidebar.radio(
         "점 크기 기준 선택",
-        ('배달건수', '품질(60분초과율)')
+        ('품질(60분초과율)', '배달건수')
     )
 
     @st.cache_resource
@@ -88,10 +88,10 @@ if uploaded_file:
                         arrowprops=dict(
                             arrowstyle='->', 
                             color='grey', 
-                            lw=1.5, 
+                            lw=1.1, 
                             linestyle='--',
-                            alpha=0.7, # 화살표 투명도 50%
-                            mutation_scale=25 # 화살표 머리 크기
+                            alpha=0.6, # 화살표 투명도 50%
+                            mutation_scale=20 # 화살표 머리 크기
                         ))
 
 
@@ -141,6 +141,12 @@ if uploaded_file:
     # 5. 축 설정 (평균선)
     ax.axvline(df_filtered['QSH_ratio'].mean(), color='gray', linestyle='--', alpha=0.5)
     ax.axhline(df_filtered['SH_per_cnt'].mean(), color='gray', linestyle='--', alpha=0.5)
+
+    # (2) ★ 전체 데이터의 평균 (초록색 점선) 추가 ★
+    total_qsh_mean = df['QSH_ratio'].mean()
+    total_sh_mean = df['SH_per_cnt'].mean()
+    ax.axvline(total_qsh_mean, color='green', linestyle='--', alpha=0.5)
+    ax.axhline(total_sh_mean, color='green', linestyle='--', alpha=0.5)
 
     # 6. 마무리
     ax.set_title(f'주차별 이슈지역', fontsize=15)
