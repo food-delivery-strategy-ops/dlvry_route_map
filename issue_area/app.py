@@ -138,9 +138,9 @@ if uploaded_file:
     for handle in lgnd.legend_handles:
         handle._sizes = [70] 
 
-    # 5. 축 설정 (평균선)
-    ax.axvline(df_filtered['QSH_ratio'].mean(), color='gray', linestyle='--', alpha=0.5)
-    ax.axhline(df_filtered['SH_per_cnt'].mean(), color='gray', linestyle='--', alpha=0.5)
+    # # 5. 축 설정 (평균선)
+    # ax.axvline(df_filtered['QSH_ratio'].mean(), color='gray', linestyle='--', alpha=0.5)
+    # ax.axhline(df_filtered['SH_per_cnt'].mean(), color='gray', linestyle='--', alpha=0.5)
 
     # (2) ★ 전체 데이터의 평균 (초록색 점선) 추가 ★
     total_qsh_mean = df['QSH_ratio'].mean()
