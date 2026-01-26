@@ -83,8 +83,8 @@ if uploaded_file:
             
             # 화살표 그리기
             ax.annotate('', 
-                        xy=(end_node['QSH_ratio'], end_node['SH_per_cnt']), # 도착점
-                        xytext=(start_node['QSH_ratio'], start_node['SH_per_cnt']), # 시작점
+                        xy=(end_node['QSH_ratio'], end_node['cnt_per_SH']), # 도착점
+                        xytext=(start_node['QSH_ratio'], start_node['cnt_per_SH']), # 시작점
                         arrowprops=dict(
                             arrowstyle='->', 
                             color='grey', 
@@ -109,7 +109,7 @@ if uploaded_file:
         # s 파라미터에 배달건수를 넣어 크기 조절 (수치가 너무 크면 적절히 나눕니다, 예: / 10)
         ax.scatter(
             week_data['QSH_ratio'], 
-            week_data['SH_per_cnt'], 
+            week_data['cnt_per_SH'], 
             s=point_sizes,  # 건수에 따른 크기 조절
             c=colors[week], 
             label=f'{week} 주차', 
@@ -122,11 +122,13 @@ if uploaded_file:
         for _, row in week_data.iterrows():
             ax.text(
                 row['QSH_ratio'], 
-                row['SH_per_cnt'], 
-                row['지역'], 
+                row['cnt_per_SH'], 
+                # row['지역'], 
+                row['지역'].replace('_', '\n'),
                 fontsize=8, 
                 ha='center', 
                 va='center',
+                linespacing=1.2,
                 fontweight='bold' if colors[week] == 'red' else 'normal'
             )
 
@@ -140,11 +142,11 @@ if uploaded_file:
 
     # # 5. 축 설정 (평균선)
     # ax.axvline(df_filtered['QSH_ratio'].mean(), color='gray', linestyle='--', alpha=0.5)
-    # ax.axhline(df_filtered['SH_per_cnt'].mean(), color='gray', linestyle='--', alpha=0.5)
+    # ax.axhline(df_filtered['cnt_per_SH'].mean(), color='gray', linestyle='--', alpha=0.5)
 
     # (2) ★ 전체 데이터의 평균 (초록색 점선) 추가 ★
     total_qsh_mean = df['QSH_ratio'].mean()
-    total_sh_mean = df['SH_per_cnt'].mean()
+    total_sh_mean = df['cnt_per_SH'].mean()
     ax.axvline(total_qsh_mean, color='green', linestyle='--', alpha=0.5)
     ax.axhline(total_sh_mean, color='green', linestyle='--', alpha=0.5)
 
