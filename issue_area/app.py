@@ -83,8 +83,8 @@ if uploaded_file:
             
             # 화살표 그리기
             ax.annotate('', 
-                        xy=(end_node['QSH 비중'], end_node['SH_per_cnt']), # 도착점
-                        xytext=(start_node['QSH 비중'], start_node['SH_per_cnt']), # 시작점
+                        xy=(end_node['QSH_ratio'], end_node['SH_per_cnt']), # 도착점
+                        xytext=(start_node['QSH_ratio'], start_node['SH_per_cnt']), # 시작점
                         arrowprops=dict(
                             arrowstyle='->', 
                             color='grey', 
@@ -108,7 +108,7 @@ if uploaded_file:
         # 산점도 그리기
         # s 파라미터에 배달건수를 넣어 크기 조절 (수치가 너무 크면 적절히 나눕니다, 예: / 10)
         ax.scatter(
-            week_data['QSH 비중'], 
+            week_data['QSH_ratio'], 
             week_data['SH_per_cnt'], 
             s=point_sizes,  # 건수에 따른 크기 조절
             c=colors[week], 
@@ -121,7 +121,7 @@ if uploaded_file:
         # 점 위에 지역명 표시
         for _, row in week_data.iterrows():
             ax.text(
-                row['QSH 비중'], 
+                row['QSH_ratio'], 
                 row['SH_per_cnt'], 
                 row['지역'], 
                 fontsize=8, 
@@ -139,13 +139,13 @@ if uploaded_file:
         handle._sizes = [70] 
 
     # 5. 축 설정 (평균선)
-    ax.axvline(df_filtered['QSH 비중'].mean(), color='gray', linestyle='--', alpha=0.5)
+    ax.axvline(df_filtered['QSH_ratio'].mean(), color='gray', linestyle='--', alpha=0.5)
     ax.axhline(df_filtered['SH_per_cnt'].mean(), color='gray', linestyle='--', alpha=0.5)
 
     # 6. 마무리
     ax.set_title(f'주차별 이슈지역', fontsize=15)
-    ax.set_xlabel('QSH 비중(%)')
-    ax.set_ylabel('ML수급율(%)')
+    ax.set_xlabel('QSH_ratio(%)')
+    ax.set_ylabel('건당 SH')
     ax.grid(True, linestyle=':', alpha=0.3)
 
     # 4. 웹 화면에 그래프 출력
